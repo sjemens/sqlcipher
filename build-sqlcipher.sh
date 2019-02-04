@@ -93,7 +93,7 @@ source vars
          ../configure --host=${TOOLCHAIN_PREFIX} \
              --with-sysroot=${ANDROID_NDK_ROOT}/sysroot \
              ${SQLCIPHER_CONFIGURE_OPTIONS} \
-             "CFLAGS=-DSQLITE_HAS_CODEC -DSQLCIPHER_CRYPTO_OPENSSL -DSQLITE_ENABLE_COLUMN_METADATA -I../${OPENSSL}/include" \
+             "CFLAGS=-DSQLITE_HAS_CODEC -DSQLCIPHER_CRYPTO_OPENSSL -DSQLITE_ENABLE_COLUMN_METADATA -I${OPENSSL}/include" \
              "LDFLAGS=${OUT_LIBS}/${SQLCIPHER_TARGET_PLATFORM}/libcrypto.a" \
              CC=${TOOLCHAIN_PREFIX}${ANDROID_API_VERSION}-clang
 
