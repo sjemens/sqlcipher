@@ -1,0 +1,23 @@
+# TARGET_PLATFORMS take values from
+#
+# armeabi 
+# armeabi-v7a
+# x86
+# x86_64
+# arm64-v8a
+#
+TARGET_PLATFORMS="armeabi-v7a x86 arm64-v8a"
+
+# Location of the android-ndk.
+# Currently tested only on android-ndk-r19
+ANDROID_NDK_ROOT=$HOME/androidsdk/ndk-bundle
+
+# Minimul versions. Should have been installed with the sdkmanager
+ANDROID_SDK_VERSION=16
+ANDROID_64_BIT_SDK_VERSION=26
+
+# This is the directory with the openssl sources
+OPENSSL=openssl-1.1.1a
+
+# This is the output directory
+OUT_LIBS=`pwd`/libs
