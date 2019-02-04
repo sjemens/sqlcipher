@@ -32,5 +32,6 @@ The resulting libraries and header files are in the OUT_LIBS folder as set in th
 
 ## Licences
 
-The helper scripts are under the MIT License
-The original sqlcipher [license](https://github.com/sqlcipher/sqlcipher/blob/master/LICENSE)
+The helper scripts are under the MIT License.
+
+The original sqlcipher [license](https://github.com/sqlcipher/sqlcipher/blob/master/LICENSE).
