@@ -58,27 +58,22 @@ source vars
      echo "Building libsqlcipher.a for ${SQLCIPHER_TARGET_PLATFORM}"
      case "${SQLCIPHER_TARGET_PLATFORM}" in
          armeabi)
-             TOOLCHAIN_ARCH=arm
              TOOLCHAIN_PREFIX=arm-linux-androideabi
              ANDROID_API_VERSION=${ANDROID_SDK_VERSION}
              ;;
          armeabi-v7a)
-             TOOLCHAIN_ARCH=arm
              TOOLCHAIN_PREFIX=armv7a-linux-androideabi
              ANDROID_API_VERSION=${ANDROID_SDK_VERSION}
              ;;
          x86)
-             TOOLCHAIN_ARCH=x86
              TOOLCHAIN_PREFIX=i686-linux-android
              ANDROID_API_VERSION=${ANDROID_SDK_VERSION}
              ;;
          x86_64)
-             TOOLCHAIN_ARCH=x86_64
              TOOLCHAIN_PREFIX=x86_64-linux-android
              ANDROID_API_VERSION=${ANDROID_64_BIT_SDK_VERSION}
              ;;
          arm64-v8a)
-             TOOLCHAIN_ARCH=arm64
              TOOLCHAIN_PREFIX=aarch64-linux-android
              ANDROID_API_VERSION=${ANDROID_64_BIT_SDK_VERSION}
              ;;
