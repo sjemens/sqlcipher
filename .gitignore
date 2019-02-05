@@ -40,3 +40,4 @@ xcuserdata/*
 /.DS_Store
 /build-android
 /libs
+/vars

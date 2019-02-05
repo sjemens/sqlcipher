@@ -17,7 +17,7 @@ ANDROID_SDK_VERSION=16
 ANDROID_64_BIT_SDK_VERSION=26
 
 # This is the directory with the openssl sources
-OPENSSL=openssl-1.1.1a
+OPENSSL=$HOME/openssl-1.1.1a
 
 # This is the output directory
-OUT_LIBS=`pwd`/libs
+DEST_DIR=$HOME/out

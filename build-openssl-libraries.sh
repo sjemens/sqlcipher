@@ -91,7 +91,7 @@ source vars
              echo "Unsupported build platform:${SQLCIPHER_TARGET_PLATFORM}"
              exit 1
      esac
-     mkdir -p "${OUT_LIBS}/${SQLCIPHER_TARGET_PLATFORM}"
+     mkdir -p "${DEST_DIR}/${SQLCIPHER_TARGET_PLATFORM}"
 
      ANDROID_NDK=${ANDROID_NDK_ROOT} \
      CC=${TOOLCHAIN_PREFIX}${ANDROID_API_VERSION}-clang \
@@ -115,6 +115,6 @@ source vars
          echo "Error executing make for platform:${SQLCIPHER_TARGET_PLATFORM}"
          exit 1
      fi
-     /usr/bin/install -m 644 libcrypto.a ${OUT_LIBS}/${SQLCIPHER_TARGET_PLATFORM}
+     /usr/bin/install -m 644 libcrypto.a ${DEST_DIR}/${SQLCIPHER_TARGET_PLATFORM}
  done
 )

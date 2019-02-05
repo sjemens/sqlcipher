@@ -94,7 +94,7 @@ source vars
              --with-sysroot=${ANDROID_NDK_ROOT}/sysroot \
              ${SQLCIPHER_CONFIGURE_OPTIONS} \
              "CFLAGS=-DSQLITE_HAS_CODEC -DSQLCIPHER_CRYPTO_OPENSSL -DSQLITE_ENABLE_COLUMN_METADATA -I${OPENSSL}/include" \
-             "LDFLAGS=${OUT_LIBS}/${SQLCIPHER_TARGET_PLATFORM}/libcrypto.a" \
+             "LDFLAGS=${DEST_DIR}/${SQLCIPHER_TARGET_PLATFORM}/libcrypto.a" \
              CC=${TOOLCHAIN_PREFIX}${ANDROID_API_VERSION}-clang
 
      if [ $? -ne 0 ]; then
@@ -111,8 +111,8 @@ source vars
          exit 1
      fi
 
-    /usr/bin/install -m 644 ./.libs/libsqlcipher.a ${OUT_LIBS}/${SQLCIPHER_TARGET_PLATFORM}
-    /usr/bin/install -m 644 ./sqlite3.h            ${OUT_LIBS}/${SQLCIPHER_TARGET_PLATFORM}
-    /usr/bin/install -m 644 ../src/sqlite3ext.h    ${OUT_LIBS}/${SQLCIPHER_TARGET_PLATFORM}
+    /usr/bin/install -m 644 ./.libs/libsqlcipher.a ${DEST_DIR}/${SQLCIPHER_TARGET_PLATFORM}
+    /usr/bin/install -m 644 ./sqlite3.h            ${DEST_DIR}/${SQLCIPHER_TARGET_PLATFORM}
+    /usr/bin/install -m 644 ../src/sqlite3ext.h    ${DEST_DIR}/${SQLCIPHER_TARGET_PLATFORM}
  done
 )
