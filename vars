@@ -12,7 +12,7 @@ TARGET_PLATFORMS="armeabi-v7a x86 arm64-v8a"
 # Currently tested only on android-ndk-r19
 ANDROID_NDK_ROOT=$HOME/androidsdk/ndk-bundle
 
-# Minimul versions. Should have been installed with the sdkmanager
+# Minimum versions. Should have been installed with the sdkmanager
 ANDROID_SDK_VERSION=16
 ANDROID_64_BIT_SDK_VERSION=26
 

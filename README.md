@@ -6,7 +6,7 @@
 
 My use case is to build the Qt5 sqldriver plugin for SQLCipher [qsqlcipher-qt5](https://github.com/sjemens/qsqlcipher-qt5) which depends on the libsqlcipher.a and libcrypto.a .
 
-## Assumptions and Requierements
+## Assumptions and Requirements
 
  - Helper programs like tcl and make are already installed.
  - Android SDK and android NDK are already installed.
@@ -28,7 +28,7 @@ vi vars # or whatever $EDITOR you like
 ./build-sqlcipher.sh
 ```
 
-The resulting libraries and header files are in the OUT_LIBS folder as set in the 'vars' file.
+The resulting libraries and header files are in the DEST_DIR folder as set in the 'vars' file.
 
 ## Licences
 
