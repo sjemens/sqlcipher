@@ -1,3 +1,10 @@
+*.pdb
+*.lib
+*.obj
+*.exe
+*.dll
+*.exp
+*.ilk
 *.lo
 *.o
 *.mode1v3
@@ -29,6 +36,8 @@ xcuserdata/*
 /sqlite3
 /sqlite3.c
 /sqlite3.h
+/sqlite3.def
+/sqlite3rc.h
 /lempar.c
 /parse.y
 /shell.c
@@ -38,3 +47,9 @@ xcuserdata/*
 /sqlite3ext.h
 /libsqlcipher.la
 /.DS_Store
+/fts5.c
+/fts5.h
+/fts5parse.c
+/fts5parse.h
+/fts5parse.out
+/fts5parse.y

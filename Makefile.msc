@@ -14,7 +14,7 @@ TOP = .
 # Set this non-0 to create and use the SQLite amalgamation file.
 #
 !IFNDEF USE_AMALGAMATION
-USE_AMALGAMATION = 1
+USE_AMALGAMATION = 0
 !ENDIF
 # <</mark>>
 
@@ -189,7 +189,7 @@ FOR_WIN10 = 0
 # runtime library.
 #
 !IFNDEF NO_TCL
-NO_TCL = 0
+NO_TCL = 1
 !ENDIF
 # <</mark>>
 
@@ -270,9 +270,9 @@ SQLITE3H = sqlite3.h
 #
 !IFNDEF SQLITE3DLL
 !IF $(FOR_WIN10)!=0
-SQLITE3DLL = winsqlite3.dll
+SQLITE3DLL = winsqlcipher.dll
 !ELSE
-SQLITE3DLL = sqlite3.dll
+SQLITE3DLL = sqlcipher.dll
 !ENDIF
 !ENDIF
 
@@ -280,9 +280,9 @@ SQLITE3DLL = sqlite3.dll
 #
 !IFNDEF SQLITE3LIB
 !IF $(FOR_WIN10)!=0
-SQLITE3LIB = winsqlite3.lib
+SQLITE3LIB = winsqlcipher.lib
 !ELSE
-SQLITE3LIB = sqlite3.lib
+SQLITE3LIB = sqlcipher.lib
 !ENDIF
 !ENDIF
 
@@ -290,9 +290,9 @@ SQLITE3LIB = sqlite3.lib
 #
 !IFNDEF SQLITE3EXE
 !IF $(FOR_WIN10)!=0
-SQLITE3EXE = winsqlite3shell.exe
+SQLITE3EXE = winsqlciphershell.exe
 !ELSE
-SQLITE3EXE = sqlite3.exe
+SQLITE3EXE = sqlcipher.exe
 !ENDIF
 !ENDIF
 
@@ -303,7 +303,7 @@ SQLITE3EXE = sqlite3.exe
 !IF $(FOR_WIN10)!=0
 SQLITE3EXEPDB =
 !ELSE
-SQLITE3EXEPDB = /pdb:sqlite3sh.pdb
+SQLITE3EXEPDB = /pdb:sqlciphersh.pdb
 !ENDIF
 !ENDIF
 
@@ -364,6 +364,10 @@ OPT_FEATURE_FLAGS = $(OPT_FEATURE_FLAGS) -DSQLITE_ENABLE_COLUMN_METADATA=1
 OPT_FEATURE_FLAGS = $(OPT_FEATURE_FLAGS) -DSQLITE_ENABLE_SESSION=1
 OPT_FEATURE_FLAGS = $(OPT_FEATURE_FLAGS) -DSQLITE_ENABLE_PREUPDATE_HOOK=1
 !ENDIF
+
+# This is needed for sqlcipher
+#
+OPT_FEATURE_FLAGS = $(OPT_FEATURE_FLAGS) -DSQLITE_HAS_CODEC=1
 
 # These are the "extended" SQLite compilation options used when compiling for
 # the Windows 10 platform.
@@ -938,6 +942,28 @@ ICULIBDIR = $(ICUDIR)\lib
 LIBICU = icuuc.lib icuin.lib
 !ENDIF
 
+# The locations of the OpenSSL header and library files.  These variables
+# (OPENSSLINCDIR, OPENSSLLIBDIR, and LIBOPENSSL) may be overridden via the environment
+# prior to running nmake in order to match the actual installed location on
+# this machine.
+#
+!IFNDEF OPENSSLDIR
+OPENSSLDIR = C:\vcpkg\installed\x64-windows
+!ENDIF
+
+!IFNDEF OPENSSLINCDIR
+OPENSSLINCDIR = $(OPENSSLDIR)\include
+!ENDIF
+
+!IFNDEF OPENSSLLIBDIR
+OPENSSLLIBDIR = $(OPENSSLDIR)\lib
+!ENDIF
+
+!IFNDEF LIBOPENSSL
+LIBOPENSSL = libeay32.lib
+!ENDIF
+
+
 # This is the command to use for tclsh - normally just "tclsh", but we may
 # know the specific version we want to use.  This variable (TCLSH_CMD) may be
 # overridden via the environment prior to running nmake in order to select a
@@ -986,8 +1012,8 @@ TLIBS =
 # default to file, 2 to default to memory, and 3 to force temporary
 # tables to always be in memory.
 #
-TCC = $(TCC) -DSQLITE_TEMP_STORE=1
-RCC = $(RCC) -DSQLITE_TEMP_STORE=1
+TCC = $(TCC) -DSQLITE_TEMP_STORE=2
+RCC = $(RCC) -DSQLITE_TEMP_STORE=2
 
 # Enable/disable loadable extensions, and other optional features
 # based on configuration. (-DSQLITE_OMIT*, -DSQLITE_ENABLE*).
@@ -1074,6 +1100,13 @@ TCC = $(TCC) -I$(ICUINCDIR)
 RCC = $(RCC) -I$(ICUINCDIR)
 !ENDIF
 # <</mark>>
+
+# Add OpenSSL specific compiler options
+#
+TCC = $(TCC) -DSQLCIPHER_CRYPTO_OPENSSL=1
+RCC = $(RCC) -DSQLCIPHER_CRYPTO_OPENSSL=1
+TCC = $(TCC) -I$(OPENSSLINCDIR)
+RCC = $(RCC) -I$(OPENSSLINCDIR)
 
 # Command line prefixes for compiling code, compiling resources,
 # linking, etc.
@@ -1205,10 +1238,32 @@ LTLIBS = $(LTLIBS) $(ZLIBLIB)
 LTLIBPATHS = $(LTLIBPATHS) /LIBPATH:$(ICULIBDIR)
 LTLIBS = $(LTLIBS) $(LIBICU)
 !ENDIF
+
+# Add OpenSSL related linker options
+#
+LTLIBPATHS = $(LTLIBPATHS) /LIBPATH:$(OPENSSLLIBDIR)
+LTLIBS = $(LTLIBS) $(LIBOPENSSL)
 # <</mark>>
 
 # You should not have to change anything below this line
 ###############################################################################
+
+# BEGIN CRYPTO
+CRYPTOLIBOBJ = crypto.lo \
+             crypto_impl.lo \
+             crypto_openssl.lo \
+             crypto_libtomcrypt.lo \
+             crypto_cc.lo
+
+CRYPTOSRC = \
+  $(TOP)\src\crypto.h \
+  $(TOP)\src\sqlcipher.h \
+  $(TOP)\src\crypto.c \
+  $(TOP)\src\crypto_impl.c \
+        $(TOP)\src\crypto_libtomcrypt.c \
+        $(TOP)\src\crypto_openssl.c \
+        $(TOP)\src\crypto_cc.c
+# END CRYPTO
 
 # <<mark>>
 # Object files for the SQLite library (non-amalgamation).
@@ -1235,7 +1290,7 @@ LIBOBJS0 = vdbe.lo parse.lo alter.lo analyze.lo attach.lo auth.lo \
          update.lo upsert.lo util.lo vacuum.lo \
          vdbeapi.lo vdbeaux.lo vdbeblob.lo vdbemem.lo vdbesort.lo \
          vdbetrace.lo wal.lo walker.lo where.lo wherecode.lo whereexpr.lo \
-         window.lo utf.lo vtab.lo
+         window.lo utf.lo vtab.lo $(CRYPTOLIBOBJ)
 # <</mark>>
 
 # Object files for the amalgamation.
@@ -1478,7 +1533,7 @@ SRC12 =
 
 # All source code files.
 #
-SRC = $(SRC00) $(SRC01) $(SRC03) $(SRC04) $(SRC05) $(SRC06) $(SRC07) $(SRC08) $(SRC09) $(SRC10) $(SRC11)
+SRC = $(SRC00) $(SRC01) $(SRC03) $(SRC04) $(SRC05) $(SRC06) $(SRC07) $(SRC08) $(SRC09) $(SRC10) $(SRC11) $(CRYPTOSRC)
 
 # Source code to the test files.
 #
@@ -1926,6 +1981,19 @@ callback.lo:	$(TOP)\src\callback.c $(HDR)
 
 complete.lo:	$(TOP)\src\complete.c $(HDR)
 	$(LTCOMPILE) $(CORE_COMPILE_OPTS) -c $(TOP)\src\complete.c
+
+# BEGIN CRYPTO
+crypto.lo:      $(TOP)\src\crypto.c $(HDR)
+        $(LTCOMPILE) $(CORE_COMPILE_OPTS) -c $(TOP)\src\crypto.c
+crypto_impl.lo: $(TOP)\src\crypto_impl.c $(HDR)
+        $(LTCOMPILE) $(CORE_COMPILE_OPTS) -c $(TOP)\src\crypto_impl.c
+crypto_openssl.lo:      $(TOP)\src\crypto_openssl.c $(HDR)
+        $(LTCOMPILE) $(CORE_COMPILE_OPTS) -c $(TOP)\src\crypto_openssl.c
+crypto_libtomcrypt.lo:  $(TOP)\src\crypto_libtomcrypt.c $(HDR)
+        $(LTCOMPILE) $(CORE_COMPILE_OPTS) -c $(TOP)\src\crypto_libtomcrypt.c
+crypto_cc.lo:   $(TOP)\src\crypto_cc.c $(HDR)
+        $(LTCOMPILE) $(CORE_COMPILE_OPTS) -c $(TOP)\src\crypto_cc.c
+# END CRYPTO
 
 ctime.lo:	$(TOP)\src\ctime.c $(HDR)
 	$(LTCOMPILE) $(CORE_COMPILE_OPTS) -c $(TOP)\src\ctime.c
