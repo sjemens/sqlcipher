@@ -106,8 +106,9 @@ source vars
          exit 1
      fi
 
-    /usr/bin/install -m 644 ./.libs/libsqlcipher.a ${DEST_DIR}/${SQLCIPHER_TARGET_PLATFORM}
-    /usr/bin/install -m 644 ./sqlite3.h            ${DEST_DIR}/${SQLCIPHER_TARGET_PLATFORM}
-    /usr/bin/install -m 644 ../src/sqlite3ext.h    ${DEST_DIR}/${SQLCIPHER_TARGET_PLATFORM}
+    /usr/bin/install -m 644 ./.libs/libsqlcipher.a  ${DEST_DIR}/${SQLCIPHER_TARGET_PLATFORM}
+    /usr/bin/install -m 644 ./.libs/libsqlcipher.so ${DEST_DIR}/${SQLCIPHER_TARGET_PLATFORM}
+    /usr/bin/install -m 644 ./sqlite3.h             ${DEST_DIR}/${SQLCIPHER_TARGET_PLATFORM}
+    /usr/bin/install -m 644 ../src/sqlite3ext.h     ${DEST_DIR}/${SQLCIPHER_TARGET_PLATFORM}
  done
 )
